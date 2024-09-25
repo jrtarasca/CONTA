@@ -1,0 +1,111 @@
+import java.util.Scanner;
+
+class BancoPoo {
+    // Atributos da classe
+    private double saldo;
+    private int consultas;
+
+    // Construtor para inicializar o saldo
+    public BancoPoo(double saldoInicial) {
+        this.saldo = saldoInicial;
+        this.consultas = 0;
+    }
+
+    // Método para sacar
+    public boolean sacar(double valor) {
+        double taxa = valor * 0.005; // Taxa de 0,5%
+        double valorFinal = valor + taxa;
+        if (valorFinal <= saldo) {
+            saldo -= valorFinal;
+            System.out.println("Saque de R$" + valor + " realizado. Taxa: R$" + taxa);
+            return true;
+        } else {
+            System.out.println("Saldo insuficiente para saque.");
+            return false;
+        }
+    }
+
+    // Método para depositar
+    public boolean depositar(double valor) {
+        double taxa = valor * 0.01; // Taxa de 1%
+        double valorFinal = valor - taxa;
+
+        if (valorFinal > 0) {
+            saldo += valorFinal;
+            System.out.println("Depósito de R$" + valor + " realizado. Taxa: R$" + taxa);
+            return true;
+        } else {
+            System.out.println("Valor de depósito insuficiente após a taxa.");
+            return false;
+        }
+    }
+
+    // Método para consultar o saldo
+    public void consultarSaldo() {
+        consultas++;
+        System.out.println("Seu saldo atual é: R$" + saldo);
+        
+        // Cobrar taxa a cada 5 consultas
+        if (consultas % 5 == 0) {
+            saldo -= 0.10; // Taxa de R$ 0,10
+            System.out.println("Você realizou 5 consultas. Taxa de R$0,10 cobrada.");
+        }
+    }
+
+    // Método para obter o saldo
+    public double getSaldo() {
+        return saldo;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scan = new Scanner(System.in);
+        BancoPoo banco = new BancoPoo(1000); // Inicia com R$ 1000
+
+        boolean continuar = true;
+
+        while (continuar) {
+            //operações
+            System.out.println("\nEscolha uma operação:\n[1] Saque\n[2] Depósito\n[3] Consulta de Saldo\n[4] Sair");
+            int opcao = scan.nextInt();
+
+            switch (opcao) {
+                case 1:
+                    //saque
+                    System.out.println("Digite o valor a ser sacado:");
+                    double valorSaque = scan.nextDouble();
+                    banco.sacar(valorSaque);
+                    break;
+
+                case 2:
+                    //depósito
+                    System.out.println("Digite o valor a ser depositado:");
+                    double valorDeposito = scan.nextDouble();
+                    banco.depositar(valorDeposito);
+                    break;
+
+                case 3:
+                    // Consulta de saldo
+                    banco.consultarSaldo();
+                    break;
+
+                case 4:
+                    continuar = false;
+                    System.out.println("\nFinalizando operações...");
+                    break;
+
+                default:
+                    System.out.println("Opção inválida. Tente novamente.");
+            }
+
+            //resumo 
+            if (!continuar) {
+                System.out.println("\nRESUMO DA SUA CONTA");
+                System.out.println("Saldo final: R$" + banco.getSaldo());
+            }
+        }
+
+        scan.close();
+    }
+}
